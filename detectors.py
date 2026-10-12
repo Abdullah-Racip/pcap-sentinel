@@ -1,8 +1,8 @@
 """
-PCAP Sentinel — detectors.
+PCAP Sentinel: detectors.
 
 Each detector is a plain function `detect_*(packets) -> list[Finding]`, registered in
-DETECTORS at the bottom. To add one: write the function, add it to the dict, done —
+DETECTORS at the bottom. To add one: write the function, add it to the dict, done,
 the CLI picks it up automatically.
 """
 from dataclasses import dataclass, field
@@ -32,7 +32,7 @@ class Finding:
 
 # ── helpers ───────────────────────────────────────────────────────────────
 def shannon_entropy(s: str) -> float:
-    """Bits/char — high = random-looking (e.g. encoded tunnel payload)."""
+    """Bits/char: high = random-looking (e.g. encoded tunnel payload)."""
     if not s:
         return 0.0
     n = len(s)
@@ -73,7 +73,7 @@ def detect_syn_flood(packets, syn_threshold=100, ratio_threshold=3.0, min_source
                 "syn_flood", "TCP SYN flood (denial of service)", "HIGH",
                 f"{n_syn} half-open SYNs to {dst}:{dport} from {n_src} sources in {span:.2f}s",
                 [f"{n_syn} SYN packets (tcp.flags.syn==1 && tcp.flags.ack==0) target {dst}:{dport}",
-                 f"only {n_ack} SYN-ACK(s) returned — connections never complete (half-open)",
+                 f"only {n_ack} SYN-ACK(s) returned, connections never complete (half-open)",
                  f"{n_src} distinct source IPs, non-completing → likely spoofed",
                  f"rate ≈ {rate:.0f} SYN/s over {span:.2f}s",
                  f"packets: {fmt_pkts(idx)}"]))
@@ -118,7 +118,7 @@ def detect_arp_spoof(packets):
     findings = []
     for ip, macs in ip_to_macs.items():
         if len(macs) > 1:
-            lines = [f"IP {ip} is claimed by {len(macs)} different MACs — impersonation:"]
+            lines = [f"IP {ip} is claimed by {len(macs)} different MACs, impersonation:"]
             for mac in macs:
                 pk = ip_mac_pkts[(ip, mac)]
                 lines.append(f"  • {mac} in {fmt_pkts(pk, limit=5)} ({len(pk)} reply/replies)")

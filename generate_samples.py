@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generate the four demo captures used to show PCAP Sentinel working — one per attack class.
+Generate the four demo captures used to show PCAP Sentinel working , one per attack class.
 Writes them into ./samples/. These are synthetic (no real hosts); run:
 
     python generate_samples.py

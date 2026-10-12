@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-Offline traffic triage — point it at a capture and it flags common network attacks,
+Offline traffic triage: point it at a capture and it flags common network attacks,
 and tells you <i>why</i>.
 </p>
 
@@ -18,8 +18,8 @@ and tells you <i>why</i>.
 I kept practising Wireshark for traffic analysis and noticed I run the same mental checklist
 on every capture: *is this a flood? a scan? is someone poisoning ARP? are there creds in the
 clear?* **PCAP Sentinel** is that checklist as code. You give it a `.pcap`, it runs a set of
-detectors, and for every hit it prints the **evidence** — packet numbers, protocol fields,
-extracted values — not just a label. Naming the attack isn't enough; the proof is the point.
+detectors, and for every hit it prints the **evidence**: packet numbers, protocol fields,
+extracted values, not just a label. Naming the attack isn't enough; the proof is the point.
 
 | Detector | Catches | Core signal |
 |---|---|---|
@@ -66,7 +66,7 @@ $ python pcap_sentinel.py samples/02_syn_flood.pcap
   [ HIGH ] TCP SYN flood (denial of service)
           300 half-open SYNs to 10.0.0.5:80 from 300 sources in 0.30s
             └ 300 SYN packets (tcp.flags.syn==1 && tcp.flags.ack==0) target 10.0.0.5:80
-            └ only 0 SYN-ACK(s) returned — connections never complete (half-open)
+            └ only 0 SYN-ACK(s) returned, connections never complete (half-open)
             └ 300 distinct source IPs, non-completing → likely spoofed
             └ rate ≈ 1014 SYN/s over 0.30s
             └ packets: #1, #2, #3, #4, #5, #6, #7, #8 … (+292 more)
@@ -82,15 +82,15 @@ $ python pcap_sentinel.py samples/01_plaintext_creds.pcap
 
 ## How each detector reasons (the *why*)
 
-- **SYN flood** — a normal session is SYN → SYN-ACK → ACK; a flood sends floods of bare SYNs
+- **SYN flood**: a normal session is SYN → SYN-ACK → ACK; a flood sends floods of bare SYNs
   and never completes the handshake, exhausting the target's half-open table. Fires when the
   SYN-to-SYN-ACK ratio is lopsided *and* the sources are many (spoofed).
-- **Port scan** — the mirror image: **one** source touching **many** ports on one host.
-- **ARP spoofing** — ARP has no authentication, so an attacker answers "that IP is at *my*
+- **Port scan**, the mirror image: **one** source touching **many** ports on one host.
+- **ARP spoofing**: ARP has no authentication, so an attacker answers "that IP is at *my*
   MAC". The tell is a single IP mapping to two different MACs.
-- **DNS tunnelling** — data smuggled inside the QNAME makes subdomains long and random-looking;
+- **DNS tunnelling**: data smuggled inside the QNAME makes subdomains long and random-looking;
   measured via average subdomain **length** and **Shannon entropy** per parent domain.
-- **Plaintext creds** — these protocols predate TLS, so credentials ride in the clear.
+- **Plaintext creds**: these protocols predate TLS, so credentials ride in the clear.
   Parses FTP/POP3 `USER`/`PASS`, IMAP `LOGIN`, HTTP POST bodies + Basic-auth (base64-decoded),
   SMTP `AUTH LOGIN`, and reconstructs the Telnet login transcript.
 
@@ -102,4 +102,4 @@ list: MAC flooding, DHCP starvation / rogue servers, DNS spoofing, and ICMP tunn
 
 ---
 
-<p align="center"><sub>Built for learning — run it only on captures you're authorised to analyse.</sub></p>
+<p align="center"><sub>Built for learning, run it only on captures you're authorised to analyse.</sub></p>

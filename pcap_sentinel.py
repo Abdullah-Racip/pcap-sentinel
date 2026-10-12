@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-PCAP Sentinel — offline traffic triage.
+PCAP Sentinel: offline traffic triage.
 
-Point it at a capture and it flags common network attacks — SYN floods, port scans,
-ARP spoofing, DNS tunnelling, and plaintext credential exposure — reporting the
+Point it at a capture and it flags common network attacks: SYN floods, port scans,
+ARP spoofing, DNS tunnelling, and plaintext credential exposure, reporting the
 *evidence* (packet numbers, protocol fields, extracted values) for each, not just a label.
 
     python pcap_sentinel.py capture.pcap
